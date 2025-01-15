@@ -1,2 +1,6 @@
 .env
+./laravel/.env
+./react/.env
+./react/node_modules
+./laravel/vendor
 
