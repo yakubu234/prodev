@@ -13,6 +13,8 @@ class TodoController extends Controller
 {
     use ApiResponse;
 
+    public const STATUS = 'open';
+
     public function create(Request $request){
 
         $validated = $request->validate([
@@ -44,7 +46,6 @@ class TodoController extends Controller
                 SendEmailNotification::dispatch($data);
             }
         }
-
     }
 
 
@@ -54,7 +55,6 @@ class TodoController extends Controller
         $validated = $request->validate([
             'title' => ['required'],
             'description' => ['required'],
-            'status' => ['nullable', 'in:open,completed']
         ]);
 
         $todo = Todo::find($id);
@@ -63,18 +63,31 @@ class TodoController extends Controller
             return $this->error('Todo not found',null, 404);
         }
 
-        isset($validated['title']) ? $todo->title = $validated['title']:'';
-        isset($validated['status']) ? $todo->status = $validated['status']:'';
-        isset($validated['description']) ? $todo->title = $validated['description']:'';
+        $todo->title = $validated['title'];
+        $todo->description = $validated['description'];
         $todo->save();
 
         $this->sendMail(['subject' => 'updated']);
         return $this->success($todo,'Todo updated successfully', 201);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $todo = Todo::find($id);
+
+        if(!$todo){
+            return $this->error('Todo not found',null, 404);
+        }
+        $todo->status = 'completed';
+        $todo->save();
+
+        $this->sendMail(['subject' => 'updated']);
+        return $this->success($todo,'Todo Completed successfully', 201);
+    }
+
     public function fetchAll(Request $request)
     {
-        $todos = Todo::all();
+        $todos = Todo::where('status', self::STATUS)->get();
         return $this->success($todos,'All Todo fetched successfully', 200);
 
     }

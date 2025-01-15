@@ -9,7 +9,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-    Route::get('/todo/{id}', [TodoController::class,'fetchSingle']);
-    Route::get('/todo', [TodoController::class,'fetchAll']);
-    Route::post('/todo/add', [TodoController::class,'create']);
-    Route::put('/todo/update/{id}', [TodoController::class,'update']);
+Route::get('/todo/{id}', [TodoController::class,'fetchSingle']);
+Route::get('/todo', [TodoController::class,'fetchAll']);
+Route::post('/todo/add', [TodoController::class,'create']);
+Route::put('/todo/update/{id}', [TodoController::class,'update']);
+Route::put('/todo/completed/{id}', [TodoController::class,'updateStatus']);

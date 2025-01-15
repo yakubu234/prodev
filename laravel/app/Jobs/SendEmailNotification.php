@@ -27,7 +27,7 @@ class SendEmailNotification implements ShouldQueue
     {
         try{
 
-            Mail::send('A todo has just been '.$this->data['subject'],[], function($message){
+            Mail::raw('A todo has just been '.$this->data['subject'], function($message){
                 $message->to($this->data['email'])
                 ->subject($this->data['subject']);
             });
